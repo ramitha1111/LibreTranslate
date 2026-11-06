@@ -28,6 +28,14 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Cache pip dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: Install dependencies
       run: |
         pipx install hatch
@@ -36,7 +44,6 @@ jobs:
 
     - name: Test with pytest
       run: hatch run test
-
 
   test_docker_build:
     runs-on: ubuntu-24.04
